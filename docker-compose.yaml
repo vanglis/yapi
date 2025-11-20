@@ -1,0 +1,29 @@
+services:
+  yapii:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: yapii
+    ports:
+      - "4000:3000"
+    depends_on:
+      - mongo
+    networks:
+      - yapii_net
+
+  mongo:
+    image: bitnami/mongodb:latest
+    container_name: yapii_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - yapii_mongo_data:/bitnami/mongodb
+    networks:
+      - yapii_net
+
+volumes:
+  yapii_mongo_data:
+
+networks:
+  yapii_net:
+    driver: bridge

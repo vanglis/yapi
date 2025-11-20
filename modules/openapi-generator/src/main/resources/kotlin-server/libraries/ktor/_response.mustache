@@ -1,0 +1,8 @@
+val exampleContentType = "{{{contentType}}}"
+val exampleContentString = """{{&example}}"""
+
+when (exampleContentType) {
+    "application/json" -> call.respondText(exampleContentType, ContentType.Application.Json)
+    "application/xml" -> call.respondText(exampleContentString, ContentType.Text.Xml)
+    else -> call.respondText(exampleContentString)
+}

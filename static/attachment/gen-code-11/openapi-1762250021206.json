@@ -1,0 +1,682 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "cehsi",
+    "version": "1.0.0",
+    "description": ""
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "paths": {
+    "/api/getInspectorsList": {
+      "post": {
+        "summary": "根据年份、电厂和领域获取专家列表",
+        "description": "",
+        "tags": [
+          "公共分类"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/post__api_getInspectorsList_Response"
+                },
+                "example": {
+                  "$schema": "http://json-schema.org/draft-04/schema#",
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "专家的usercode"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "专家的姓名"
+                          }
+                        }
+                      }
+                    },
+                    "responseStatus": {
+                      "type": "object",
+                      "properties": {
+                        "ack": {
+                          "type": "string"
+                        },
+                        "code": {
+                          "type": "string"
+                        },
+                        "timestamp": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/post__api_getInspectorsList_Request"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/getBasicResources": {
+      "post": {
+        "summary": "任务管理下拉框+事实问题下拉框+专家列表",
+        "description": "输入样例：\n\n```\n1、查询值列表（注：获取全部的电厂、专家时，无需传codeType，其他的都需要传codeType，具体codeType请参考[http://conf.cnnp.com.cn/pages/viewpage.action?pageId=44437728](http://conf.cnnp.com.cn/pages/viewpage.action?pageId=44437728)）\n\n{\n  \"codeTypeList\": [\n    \"inspect_method\",\n    \"fact_category\"\n  ],  \"resourcesType\": \"staticCode\"\n}\n\n2、查询筛选下拉框\n\n{\n  \"year\": 2025,\n  \"expertId\": \"t_zhongkai1\",\n  \"resourcesType\": \"filterOption\"\n}\n```\n\n输出样例\n\n```\n1、查询值列表\n\n\n{\n  \"getStaticCodeListVo\": {\n    \"inspectorList\": [\n      {\n        \"certCode\": \"360782199303150037\",\n        \"email\": \"t_zhongkai@cnnp.com.cn\",\n        \"phone\": \"18575503315\",\n        \"sex\": \"1\",\n        \"userCode\": \"80283102\",\n        \"userName\": \"钟锴\"\n      },      {\n        \"certCode\": \"140203199703080433\",\n        \"email\": \"t_liangyue01@cnnp.com.cn\",\n        \"phone\": \"13641927040\",\n        \"sex\": \"1\",\n        \"userCode\": \"80294867\",\n        \"userName\": \"梁越\"\n      },      {\n        \"certCode\": \"412728199908212825\",\n        \"email\": \"t_dongjr@cnnp.com.cn\",\n        \"phone\": \"13137910705\",\n        \"sex\": \"2\",\n        \"userCode\": \"80292922\",\n        \"userName\": \"董静茹\"\n      }    ],\n    <span class=\"colour\" style=\"color: rgb(163, 21, 21);\">\"powerInfoList\"</span><span class=\"colour\" style=\"color: rgb(0, 0, 0);\">: [</span>\n{\n\"id\": 1,\n\"powerId\": \"QS\",\n\"powerName\": \"秦山核电\"\n},\n{\n\"id\": 2,\n\"powerId\": \"XP\",\n\"powerName\": \"霞浦核电\"\n}\n],\n    \"staticCodeMappings\": {\n      \"fact_category\": [\n        {\n          \"id\": 456,\n          \"isDefault\": 1,\n          \"itemCode\": \"PROGRAM_INSUFFICENT\",\n          \"itemName\": \"程序知道执行不足\",\n          \"parentId\": 0,\n          \"sort\": 1,\n          \"typeId\": 127\n        },        {\n          \"id\": 457,\n          \"isDefault\": 1,\n          \"itemCode\": \"PROGRAM_QUALITY_PROBLEM\",\n          \"itemName\": \"程序制度质量问题\",\n          \"parentId\": 0,\n          \"sort\": 2,\n          \"typeId\": 127\n        },        {\n          \"id\": 458,\n          \"isDefault\": 1,\n          \"itemCode\": \"PROGRAM_UN_CONSTRAINT\",\n          \"itemName\": \"程序制度未满足上游规范标准\",\n          \"parentId\": 0,\n          \"sort\": 3,\n          \"typeId\": 127\n        },        {\n          \"id\": 459,\n          \"isDefault\": 1,\n          \"itemCode\": \"MANUAL_OPERATION_ERROR\",\n          \"itemName\": \"人员行为偏差\",\n          \"parentId\": 0,\n          \"sort\": 4,\n          \"typeId\": 127\n        },        {\n          \"id\": 460,\n          \"isDefault\": 1,\n          \"itemCode\": \"DESIGN_DEFECTS\",\n          \"itemName\": \"设计缺陷\",\n          \"parentId\": 0,\n          \"sort\": 5,\n          \"typeId\": 127\n        },        {\n          \"id\": 461,\n          \"isDefault\": 1,\n          \"itemCode\": \"UN_TIME_PROCESSED\",\n          \"itemName\": \"未及时消缺\",\n          \"parentId\": 0,\n          \"sort\": 6,\n          \"typeId\": 127\n        }      ],\n      \"inspect_method\": [\n        {\n          \"id\": 452,\n          \"isDefault\": 1,\n          \"itemCode\": \"STAFF_INTERVIEW\",\n          \"itemName\": \"人员访谈\",\n          \"parentId\": 0,\n          \"sort\": 1,\n          \"typeId\": 126\n        },        {\n          \"id\": 453,\n          \"isDefault\": 1,\n          \"itemCode\": \"ACTIVITY_OBSERVATION\",\n          \"itemName\": \"活动观察\",\n          \"parentId\": 0,\n          \"sort\": 2,\n          \"typeId\": 126\n        },        {\n          \"id\": 454,\n          \"isDefault\": 1,\n          \"itemCode\": \"SITE_INSPECTION\",\n          \"itemName\": \"现场巡视\",\n          \"parentId\": 0,\n          \"sort\": 3,\n          \"typeId\": 126\n        },        {\n          \"id\": 455,\n          \"isDefault\": 1,\n          \"itemCode\": \"DOCUMENT_REVIEW\",\n          \"itemName\": \"文件查阅\",\n          \"parentId\": 0,\n          \"sort\": 4,\n          \"typeId\": 126\n        }      ]\n    }\n  },\n  \"responseStatus\": {\n    \"ack\": \"Success\",\n    \"code\": \"200\",\n    \"timestamp\": 1755760426013\n  }\n}\n2、查询筛选下拉框\n\n{\n  \"getFilterOptionVo\": {\n    \"domainsMapping\": [\n      {\n        \"key\": \"HXGL\",\n        \"keyValueList\": [\n          {\n            \"key\": \"SM\",\n            \"value\": \"2#电厂\"\n          },          {\n            \"key\": \"QS\",\n            \"value\": \"1#电厂\"\n          }        ],\n        \"value\": \"化学管理\"\n      },      {\n        \"key\": \"HXGL1\",\n        \"keyValueList\": [\n          {\n            \"key\": \"SM\",\n            \"value\": \"2#电厂\"\n          },          {\n            \"key\": \"QS\",\n            \"value\": \"1#电厂\"\n          }        ],\n        \"value\": \"化学管理1\"\n      }    ],\n    \"powerPlantKeyMapping\": [\n      {\n        \"key\": \"SM\",\n        \"keyValueList\": [\n          {\n            \"key\": \"HXGL1\",\n            \"value\": \"化学管理1\"\n          },          {\n            \"key\": \"HXGL\",\n            \"value\": \"化学管理\"\n          }        ],\n        \"value\": \"2#电厂\"\n      },      {\n        \"key\": \"QS\",\n        \"keyValueList\": [\n          {\n            \"key\": \"HXGL1\",\n            \"value\": \"化学管理1\"\n          },          {\n            \"key\": \"HXGL\",\n            \"value\": \"化学管理\"\n          }        ],\n        \"value\": \"1#电厂\"\n      }    ]\n  },\n  \"responseStatus\": {\n    \"ack\": \"Success\",\n    \"code\": \"200\",\n    \"timestamp\": 1755674260754\n  }\n}\n```",
+        "tags": [
+          "公共分类"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/post__api_getBasicResources_Response"
+                },
+                "example": {
+                  "$schema": "http://json-schema.org/draft-04/schema#",
+                  "type": "object",
+                  "properties": {
+                    "getFilterOptionVo": {
+                      "type": "object",
+                      "properties": {
+                        "domainsMapping": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "key": {
+                                "type": "string",
+                                "description": "领域类型"
+                              },
+                              "value": {
+                                "type": "string",
+                                "description": "数量"
+                              },
+                              "keyValueList": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "key": {
+                                      "type": "string",
+                                      "description": "电厂code"
+                                    },
+                                    "value": {
+                                      "type": "string",
+                                      "description": "电厂名称"
+                                    }
+                                  },
+                                  "required": [
+                                    "key",
+                                    "value"
+                                  ]
+                                },
+                                "description": "关联电厂列表"
+                              }
+                            },
+                            "required": [
+                              "key",
+                              "value",
+                              "keyValueList"
+                            ]
+                          },
+                          "description": "领域列表"
+                        },
+                        "powerPlantKeyMapping": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "key": {
+                                "type": "string",
+                                "description": "电厂"
+                              },
+                              "value": {
+                                "type": "string",
+                                "description": "数量"
+                              },
+                              "keyValueList": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "key": {
+                                      "type": "string",
+                                      "description": "领域code"
+                                    },
+                                    "value": {
+                                      "type": "string",
+                                      "description": "领域名称"
+                                    }
+                                  },
+                                  "required": [
+                                    "key",
+                                    "value"
+                                  ]
+                                },
+                                "description": "关联领域"
+                              }
+                            },
+                            "required": [
+                              "key",
+                              "value",
+                              "keyValueList"
+                            ]
+                          },
+                          "description": "电厂列表"
+                        }
+                      },
+                      "description": "条件赛选下拉框"
+                    },
+                    "getStaticCodeListVo": {
+                      "type": "object",
+                      "properties": {
+                        "fact_category": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "isDefault": {
+                                "type": "string"
+                              },
+                              "itemCode": {
+                                "type": "string",
+                                "description": "值code"
+                              },
+                              "itemName": {
+                                "type": "string",
+                                "description": "值名称"
+                              },
+                              "parentId": {
+                                "type": "string"
+                              },
+                              "sort": {
+                                "type": "string",
+                                "description": "排序"
+                              },
+                              "typeId": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "isDefault",
+                              "itemCode",
+                              "itemName",
+                              "parentId",
+                              "sort",
+                              "typeId"
+                            ]
+                          },
+                          "description": "值列表类型"
+                        },
+                        "powerInfoList": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "powerId": {
+                                "type": "string",
+                                "description": "电厂id"
+                              },
+                              "powerName": {
+                                "type": "string",
+                                "description": "电厂名称"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "powerId",
+                              "powerName"
+                            ]
+                          }
+                        },
+                        "inspectorList": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "certCode": {
+                                "type": "string",
+                                "description": "身份证"
+                              },
+                              "email": {
+                                "type": "string",
+                                "description": "邮件"
+                              },
+                              "phone": {
+                                "type": "string",
+                                "description": "电话"
+                              },
+                              "sex": {
+                                "type": "string",
+                                "description": "性别"
+                              },
+                              "userCode": {
+                                "type": "string",
+                                "description": "用户code"
+                              },
+                              "userName": {
+                                "type": "string",
+                                "description": "姓名"
+                              }
+                            },
+                            "required": [
+                              "certCode",
+                              "email",
+                              "phone",
+                              "sex",
+                              "userCode",
+                              "userName"
+                            ]
+                          },
+                          "description": "专家列表"
+                        }
+                      },
+                      "description": "静态值列表",
+                      "required": [
+                        "powerInfoList",
+                        "inspectorList"
+                      ]
+                    },
+                    "responseStatus": {
+                      "type": "object",
+                      "properties": {
+                        "ack": {
+                          "type": "string"
+                        },
+                        "code": {
+                          "type": "string"
+                        },
+                        "timestamp": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/post__api_getBasicResources_Request"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "post__api_getInspectorsList_Request": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "string"
+          },
+          "powerId": {
+            "type": "string"
+          },
+          "domainCode": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "year"
+        ]
+      },
+      "post__api_getInspectorsList_Response": {
+        "example": {
+          "$schema": "http://json-schema.org/draft-04/schema#",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "专家的usercode"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "专家的姓名"
+                  }
+                }
+              }
+            },
+            "responseStatus": {
+              "type": "object",
+              "properties": {
+                "ack": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "string"
+                },
+                "timestamp": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post__api_getBasicResources_Request": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "codeTypeList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "值列表类型"
+          },
+          "year": {
+            "type": "number",
+            "description": "年份"
+          },
+          "resourcesType": {
+            "type": "string",
+            "description": "资源类型；staticCode、filterOption"
+          },
+          "expertId": {
+            "type": "string",
+            "description": "专家id"
+          }
+        },
+        "required": [
+          "resourcesType",
+          "year"
+        ]
+      },
+      "post__api_getBasicResources_Response": {
+        "example": {
+          "$schema": "http://json-schema.org/draft-04/schema#",
+          "type": "object",
+          "properties": {
+            "getFilterOptionVo": {
+              "type": "object",
+              "properties": {
+                "domainsMapping": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "key": {
+                        "type": "string",
+                        "description": "领域类型"
+                      },
+                      "value": {
+                        "type": "string",
+                        "description": "数量"
+                      },
+                      "keyValueList": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "key": {
+                              "type": "string",
+                              "description": "电厂code"
+                            },
+                            "value": {
+                              "type": "string",
+                              "description": "电厂名称"
+                            }
+                          },
+                          "required": [
+                            "key",
+                            "value"
+                          ]
+                        },
+                        "description": "关联电厂列表"
+                      }
+                    },
+                    "required": [
+                      "key",
+                      "value",
+                      "keyValueList"
+                    ]
+                  },
+                  "description": "领域列表"
+                },
+                "powerPlantKeyMapping": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "key": {
+                        "type": "string",
+                        "description": "电厂"
+                      },
+                      "value": {
+                        "type": "string",
+                        "description": "数量"
+                      },
+                      "keyValueList": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "key": {
+                              "type": "string",
+                              "description": "领域code"
+                            },
+                            "value": {
+                              "type": "string",
+                              "description": "领域名称"
+                            }
+                          },
+                          "required": [
+                            "key",
+                            "value"
+                          ]
+                        },
+                        "description": "关联领域"
+                      }
+                    },
+                    "required": [
+                      "key",
+                      "value",
+                      "keyValueList"
+                    ]
+                  },
+                  "description": "电厂列表"
+                }
+              },
+              "description": "条件赛选下拉框"
+            },
+            "getStaticCodeListVo": {
+              "type": "object",
+              "properties": {
+                "fact_category": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "isDefault": {
+                        "type": "string"
+                      },
+                      "itemCode": {
+                        "type": "string",
+                        "description": "值code"
+                      },
+                      "itemName": {
+                        "type": "string",
+                        "description": "值名称"
+                      },
+                      "parentId": {
+                        "type": "string"
+                      },
+                      "sort": {
+                        "type": "string",
+                        "description": "排序"
+                      },
+                      "typeId": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "isDefault",
+                      "itemCode",
+                      "itemName",
+                      "parentId",
+                      "sort",
+                      "typeId"
+                    ]
+                  },
+                  "description": "值列表类型"
+                },
+                "powerInfoList": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "powerId": {
+                        "type": "string",
+                        "description": "电厂id"
+                      },
+                      "powerName": {
+                        "type": "string",
+                        "description": "电厂名称"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "powerId",
+                      "powerName"
+                    ]
+                  }
+                },
+                "inspectorList": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "certCode": {
+                        "type": "string",
+                        "description": "身份证"
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "邮件"
+                      },
+                      "phone": {
+                        "type": "string",
+                        "description": "电话"
+                      },
+                      "sex": {
+                        "type": "string",
+                        "description": "性别"
+                      },
+                      "userCode": {
+                        "type": "string",
+                        "description": "用户code"
+                      },
+                      "userName": {
+                        "type": "string",
+                        "description": "姓名"
+                      }
+                    },
+                    "required": [
+                      "certCode",
+                      "email",
+                      "phone",
+                      "sex",
+                      "userCode",
+                      "userName"
+                    ]
+                  },
+                  "description": "专家列表"
+                }
+              },
+              "description": "静态值列表",
+              "required": [
+                "powerInfoList",
+                "inspectorList"
+              ]
+            },
+            "responseStatus": {
+              "type": "object",
+              "properties": {
+                "ack": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "string"
+                },
+                "timestamp": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

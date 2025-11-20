@@ -1,0 +1,40 @@
+package {{businessPackage}}.repository;
+
+{{#imports}}import {{import}};
+{{/imports}}
+import {{apiPackage}}.{{classname}};
+{{#models}}{{#model}}import {{apiPackage}}.model.{{classname}};
+{{/model}}{{/models}}
+import org.springframework.stereotype.Repository;
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * 数据访问层: {{classname}}Repository
+ * 负责数据持久化和查询
+ * 自动生成时间: {{generatedDate}}
+ */
+@Slf4j
+@Repository
+public class {{classname}}Repository {
+{{#operations}}
+{{#operation}}
+
+    /**
+     * {{summary}}
+     * {{notes}}
+     */
+    public {{#returnType}}{{returnType}}{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}(
+{{#allParams}}
+        {{dataType}} {{paramName}}{{^-last}},{{/-last}}
+{{/allParams}}
+    ) {
+        log.debug("Repository数据访问: {{operationId}}");
+        // TODO: 实现数据库访问逻辑
+        // 可以使用 MyBatis, JPA 或其他持久层框架
+        {{#returnType}}
+        return null; // 返回实际查询结果
+        {{/returnType}}
+    }
+{{/operation}}
+{{/operations}}
+}

@@ -1,0 +1,9 @@
+{{^vendorExtensions.x-sse}}
+{{#reactive}}
+{{#useResponseEntity}}Mono<ResponseEntity<{{classname}}.UnifiedResponse<{{#isArray}}Flux<{{/isArray}}{{>returnTypes}}{{#isArray}}>{{/isArray}}>>>{{/useResponseEntity}}{{^useResponseEntity}}{{#isArray}}Flux{{/isArray}}{{^isArray}}Mono{{/isArray}}<{{classname}}.UnifiedResponse<{{>returnTypes}}>>{{/useResponseEntity}}
+{{/reactive}}
+{{^reactive}}
+{{#useResponseEntity}}ResponseEntity<{{classname}}.UnifiedResponse<{{>returnTypes}}>>{{/useResponseEntity}}{{^useResponseEntity}}{{classname}}.UnifiedResponse<{{>returnTypes}}>{{/useResponseEntity}}
+{{/reactive}}
+{{/vendorExtensions.x-sse}}
+{{#vendorExtensions.x-sse}}{{#isArray}}Flux{{/isArray}}{{^isArray}}Mono{{/isArray}}<{{classname}}.UnifiedResponse<{{>returnTypes}}>>{{/vendorExtensions.x-sse}}

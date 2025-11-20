@@ -1,0 +1,33 @@
+package {{businessPackage}};
+
+{{#imports}}import {{import}};
+{{/imports}}
+import {{apiPackage}}.{{classname}};
+{{#models}}{{#model}}import {{apiPackage}}.model.{{classname}};
+{{/model}}{{/models}}
+
+/**
+ * 业务服务接口: {{classname}}Service
+ * 基于API: {{classname}}
+ * 自动生成时间: {{generatedDate}}
+ */
+public interface {{classname}}Service {
+{{#operations}}
+{{#operation}}
+
+    /**
+     * {{summary}}
+     * {{notes}}
+{{#allParams}}
+     * @param {{paramName}} {{description}}
+{{/allParams}}
+     * @return {{returnType}}
+     */
+    {{classname}}.UnifiedResponse<{{#returnType}}{{returnType}}{{/returnType}}{{^returnType}}Void{{/returnType}}> {{operationId}}(
+{{#allParams}}
+        {{dataType}} {{paramName}}{{^-last}},{{/-last}}
+{{/allParams}}
+    );
+{{/operation}}
+{{/operations}}
+}

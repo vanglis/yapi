@@ -1,0 +1,13 @@
+{
+  "id": "task-1762409938305-3855",
+  "projectId": "11",
+  "status": "failed",
+  "cmd": "java -jar D:\\yapii\\yapii\\modules\\openapi-generator-cli\\target\\openapi-generator-cli.jar generate -i D:\\yapii\\yapii\\static\\attachment\\gen-code-11\\openapi-1762409938298.json -g java -t D:\\yapii\\yapii\\modules\\openapi-generator\\src\\main\\resources\\Java --additional-properties hideGenerationTimestamp=true -o D:\\yapii\\yapii\\data\\openapi-1762409938298",
+  "openapiUrl": "http://127.0.0.1:3000/attachment/gen-code-11/openapi-1762409938298.json",
+  "outDir": "D:\\yapii\\yapii\\data\\openapi-1762409938298",
+  "logFile": "D:\\yapii\\yapii\\exts\\yapi-plugin-gen-code\\tasks\\task-1762409938305-3855.log",
+  "createTime": 1762409938313,
+  "endTime": 1762409940993,
+  "pid": 32704,
+  "lastLogSnippet": "Command: java -jar D:\\yapii\\yapii\\modules\\openapi-generator-cli\\target\\openapi-generator-cli.jar generate -i D:\\yapii\\yapii\\static\\attachment\\gen-code-11\\openapi-1762409938298.json -g java -t D:\\yapii\\yapii\\modules\\openapi-generator\\src\\main\\resources\\Java --additional-properties hideGenerationTimestamp=true -o D:\\yapii\\yapii\\data\\openapi-1762409938298\nStart Time: 2025-11-06T06:18:58.317Z\njava -version stderr:\nPicked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8\njava version \"25\" 2025-09-16 LTS\r\nJava(TM) SE Runtime Environment (build 25+37-LTS-3491)\r\nJava HotSpot(TM) 64-Bit Server VM (build 25+37-LTS-3491, mixed mode, sharing)\r\n\njarPath: D:\\yapii\\yapii\\modules\\openapi-generator-cli\\target\\openapi-generator-cli.jar exists=true\nspawn cwd: D:\\yapii\\yapii jarCwd: D:\\yapii\\yapii\\modules\\openapi-generator-cli\\target\nSpawned pid: 32704\nPicked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8\n"
+}

@@ -1,0 +1,67 @@
+{{^reactive}}
+// 进入示例处理或默认实现（自动生成内容，可根据业务替换）
+{{#examples}}
+    {{#-first}}
+            {{#async}}
+return CompletableFuture.supplyAsync(()-> {
+            {{/async}}{{#returnSuccessCode}}AtomicInteger statusCode = new AtomicInteger(501);
+            {{/returnSuccessCode}}getRequest().ifPresent(request -> {
+{{#async}}    {{/async}}            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+    {{/-first}}
+{{#async}}        {{/async}}{{^async}}    {{/async}}            if (mediaType.isCompatibleWith(MediaType.valueOf("{{{contentType}}}"))) {
+{{#async}}        {{/async}}{{^async}}    {{/async}}                String exampleString = {{>exampleString}};
+{{#async}}        {{/async}}{{^async}}    {{/async}}                ApiUtil.setExampleResponse(request, "{{{contentType}}}", exampleString);{{#returnSuccessCode}}
+{{#async}}        {{/async}}{{^async}}    {{/async}}                statusCode.set({{{statusCode}}});{{/returnSuccessCode}}
+{{#async}}        {{/async}}{{^async}}    {{/async}}                break;
+{{#async}}        {{/async}}{{^async}}    {{/async}}            }
+    {{#-last}}
+{{#async}}        {{/async}}{{^async}}    {{/async}}        }
+{{#async}}    {{/async}}        });
+{{#async}}    {{/async}}        {{#useResponseEntity}}return new ResponseEntity<>({{#returnSuccessCode}}HttpStatus.valueOf(statusCode.get()){{/returnSuccessCode}}{{^returnSuccessCode}}HttpStatus.NOT_IMPLEMENTED{{/returnSuccessCode}});
+{{/useResponseEntity}}
+{{^useResponseEntity}}throw new IllegalArgumentException("Not implemented");
+{{/useResponseEntity}}
+            {{#async}}
+        }, Runnable::run);
+            {{/async}}
+    {{/-last}}
+{{/examples}}
+{{^examples}}
+    // 调用Service层业务逻辑
+    {{classname}}.UnifiedResponse<{{#returnType}}{{returnType}}{{/returnType}}{{^returnType}}Void{{/returnType}}> serviceResult = {{classVarName}}Service.{{operationId}}({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
+    {{#useResponseEntity}}return {{#async}}CompletableFuture.completedFuture({{/async}}new ResponseEntity<>(serviceResult, {{#returnSuccessCode}}HttpStatus.OK{{/returnSuccessCode}}{{^returnSuccessCode}}HttpStatus.OK{{/returnSuccessCode}}){{#async}}){{/async}};
+    {{/useResponseEntity}}
+    {{^useResponseEntity}}return serviceResult;
+    {{/useResponseEntity}}
+{{/examples}}
+{{/reactive}}
+{{#reactive}}
+{{^vendorExtensions.x-sse}}
+// Reactive 模式：空结果或示例响应（可扩展）
+Mono<Void> result = Mono.empty();
+    {{#examples}}
+        {{#-first}}
+        exchange.getResponse().setStatusCode({{#returnSuccessCode}}HttpStatus.valueOf({{{statusCode}}}){{/returnSuccessCode}}{{^returnSuccessCode}}HttpStatus.NOT_IMPLEMENTED{{/returnSuccessCode}});
+        for (MediaType mediaType : exchange.getRequest().getHeaders().getAccept()) {
+        {{/-first}}
+            if (mediaType.isCompatibleWith(MediaType.valueOf("{{{contentType}}}"))) {
+                String exampleString = {{>exampleString}};
+                result = ApiUtil.getExampleResponse(exchange, MediaType.valueOf("{{{generatedContentType}}}"), exampleString);
+                break;
+            }
+        {{#-last}}
+        }
+        {{/-last}}
+    {{/examples}}
+{{^examples}}
+    // 默认未实现（Reactive）
+    exchange.getResponse().setStatusCode({{#returnSuccessCode}}HttpStatus.OK{{/returnSuccessCode}}{{^returnSuccessCode}}HttpStatus.NOT_IMPLEMENTED{{/returnSuccessCode}});
+{{/examples}}
+        return result{{#allParams}}{{#isBodyParam}}{{^isArray}}{{#paramName}}.then({{.}}){{/paramName}}{{/isArray}}{{#isArray}}{{#paramName}}.thenMany({{.}}){{/paramName}}{{/isArray}}{{/isBodyParam}}{{/allParams}}{{#isArray}}{{#useResponseEntity}}.then(Mono.empty()){{/useResponseEntity}}{{^useResponseEntity}}.thenMany(Flux.empty()){{/useResponseEntity}}{{/isArray}}{{^isArray}}.then(Mono.empty()){{/isArray}};
+{{/vendorExtensions.x-sse}}
+{{#vendorExtensions.x-sse}}
+// SSE 推送模式：默认空流
+exchange.getResponse().setStatusCode({{#returnSuccessCode}}HttpStatus.valueOf({{{statusCode}}}){{/returnSuccessCode}}{{^returnSuccessCode}}HttpStatus.NOT_IMPLEMENTED{{/returnSuccessCode}});
+        return Flux.empty();
+{{/vendorExtensions.x-sse}}
+{{/reactive}}

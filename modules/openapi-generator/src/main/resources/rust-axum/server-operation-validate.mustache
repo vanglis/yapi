@@ -1,0 +1,262 @@
+{{^x-consumes-multipart-related}}
+{{^x-consumes-multipart}}
+  {{#bodyParam}}
+  {{#vendorExtensions}}
+    #[derive(validator::Validate)]
+    #[allow(dead_code)]
+    struct {{{operationIdCamelCase}}}BodyValidator<'a> {
+      {{^x-consumes-plain-text}}
+          {{#isModel}}
+          #[validate(nested)]
+          {{/isModel}}
+          {{^isModel}}
+          {{#hasValidation}}
+            #[validate(
+                {{#maxLength}}
+                    {{#minLength}}
+                    length(min = {{minLength}}, max = {{maxLength}}),
+                    {{/minLength}}
+                    {{^minLength}}
+                    length(max = {{maxLength}}),
+                    {{/minLength}}
+                {{/maxLength}}
+                {{^maxLength}}
+                    {{#minLength}}
+                    length(min = {{minLength}}),
+                    {{/minLength}}
+                {{/maxLength}}
+                {{#pattern}}
+                  {{#isString}}
+                    regex(path = *RE_{{#lambda.uppercase}}{{{operationIdCamelCase}}}BodyValidator{{/lambda.uppercase}}),
+                  {{/isString}}
+                  {{^isString}}
+                    custom(function = "validate_byte_{{#lambda.lowercase}}{{{operationIdCamelCase}}}BodyValidator{{/lambda.lowercase}}"),
+                  {{/isString}}
+                {{/pattern}}
+                {{#isString}}
+                  custom(function = "check_xss_string"),
+                {{/isString}}
+                {{#maximum}}
+                    {{#minimum}}
+                    range(min = {{minimum}}, max = {{maximum}}),
+                    {{/minimum}}
+                    {{^minimum}}
+                    range(max = {{maximum}}),
+                    {{/minimum}}
+                {{/maximum}}
+                {{#minimum}}
+                    {{^maximum}}
+                    range(min = {{minimum}}),
+                    {{/maximum}}
+                {{/minimum}}
+                {{#maxItems}}
+                    {{#minItems}}
+                    length(min = {{minItems}}, max = {{maxItems}}),
+                    {{/minItems}}
+                    {{^minItems}}
+                    length(max = {{maxItems}}),
+                    {{/minItems}}
+                {{/maxItems}}
+                {{^maxItems}}
+                    {{#minItems}}
+                    length(min = {{minItems}}),
+                    {{/minItems}}
+                {{/maxItems}}
+                {{#vendorExtensions.is-vec-nested}}
+                   nested,
+                {{/vendorExtensions.is-vec-nested}}
+                {{#vendorExtensions.is-vec-string}}
+                  custom(function = "check_xss_vec_string"),
+                {{/vendorExtensions.is-vec-string}}
+                {{#vendorExtensions.is-map-nested}}
+                  custom(function = "check_xss_map_nested"),
+                {{/vendorExtensions.is-map-nested}}
+                {{#vendorExtensions.is-map}}
+                  custom(function = "check_xss_map"),
+                {{/vendorExtensions.is-map}}
+                {{#vendorExtensions.is-map-string}}
+                  custom(function = "check_xss_map_string"),
+                {{/vendorExtensions.is-map-string}}            )]
+          {{/hasValidation}}
+          {{^hasValidation}}
+              {{#vendorExtensions.is-nested}}
+                #[validate(nested)]
+              {{/vendorExtensions.is-nested}}
+              {{#vendorExtensions.is-string}}
+                #[validate(custom(function = "check_xss_string"))]
+              {{/vendorExtensions.is-string}}
+              {{#vendorExtensions.is-vec-nested}}
+                #[validate(nested)]
+              {{/vendorExtensions.is-vec-nested}}
+              {{#vendorExtensions.is-vec-string}}
+                #[validate(custom(function = "check_xss_vec_string"))]
+              {{/vendorExtensions.is-vec-string}}
+              {{#vendorExtensions.is-map-nested}}
+                #[validate(custom(function = "check_xss_map_nested"))]
+              {{/vendorExtensions.is-map-nested}}
+              {{#vendorExtensions.is-map}}
+                #[validate(custom(function = "check_xss_map"))]
+              {{/vendorExtensions.is-map}}
+              {{#vendorExtensions.is-map-string}}
+                #[validate(custom(function = "check_xss_map_string"))]
+              {{/vendorExtensions.is-map-string}}
+          {{/hasValidation}}
+          {{/isModel}}
+          body: &'a {{{dataType}}},
+      {{/x-consumes-plain-text}}
+      {{#x-consumes-plain-text}}
+        {{#isString}}
+          #[validate(custom(function = "check_xss_string"))]
+          body: &'a String,
+        {{/isString}}
+        {{^isString}}
+          body: &'a [u8],
+        {{/isString}}
+      {{/x-consumes-plain-text}}
+    }
+
+    {{#hasValidation}}
+    {{#pattern}}
+    {{#isString}}
+    lazy_static::lazy_static! {
+        static ref RE_{{#lambda.uppercase}}{{{operationIdCamelCase}}}BodyValidator{{/lambda.uppercase}}: regex::Regex = regex::Regex::new("{{ pattern }}").unwrap();
+    }
+    {{/isString}}
+    {{^isString}}
+    lazy_static::lazy_static! {
+        static ref RE_{{#lambda.uppercase}}{{{operationIdCamelCase}}}BodyValidator{{/lambda.uppercase}}: regex::bytes::Regex = regex::bytes::Regex::new("{{ pattern }}").unwrap();
+    }
+    fn validate_byte_{{#lambda.lowercase}}{{{operationIdCamelCase}}}BodyValidator{{/lambda.lowercase}}(
+        b: &[u8]
+    ) -> std::result::Result<(), validator::ValidationError> {
+        if !RE_{{#lambda.uppercase}}{{{operationIdCamelCase}}}BodyValidator{{/lambda.uppercase}}.is_match(b) {
+            return Err(validator::ValidationError::new("Character not allowed"));
+        }
+        Ok(())
+    }
+    {{/isString}}
+    {{/pattern}}
+    {{/hasValidation}}
+  {{/vendorExtensions}}
+  {{/bodyParam}}
+{{/x-consumes-multipart}}
+{{/x-consumes-multipart-related}}
+
+#[tracing::instrument(skip_all)]
+fn {{#vendorExtensions}}{{{x-operation-id}}}_validation{{/vendorExtensions}}(
+{{#headerParams.size}}
+  header_params: models::{{{operationIdCamelCase}}}HeaderParams,
+{{/headerParams.size}}
+{{#pathParams.size}}
+  path_params: models::{{{operationIdCamelCase}}}PathParams,
+{{/pathParams.size}}
+{{#queryParams.size}}
+  query_params: models::{{{operationIdCamelCase}}}QueryParams,
+{{/queryParams.size}}
+{{^x-consumes-multipart-related}}
+{{^x-consumes-multipart}}
+  {{#bodyParam}}
+  {{#vendorExtensions}}
+    {{^x-consumes-plain-text}}
+        body: {{^required}}Option<{{/required}}{{{dataType}}}{{^required}}>{{/required}},
+    {{/x-consumes-plain-text}}
+    {{#x-consumes-plain-text}}
+      {{#isString}}
+        body: String,
+      {{/isString}}
+      {{^isString}}
+        body: Bytes,
+      {{/isString}}
+    {{/x-consumes-plain-text}}
+  {{/vendorExtensions}}
+  {{/bodyParam}}
+{{/x-consumes-multipart}}
+{{/x-consumes-multipart-related}}
+) -> std::result::Result<(
+{{#headerParams.size}}
+  models::{{{operationIdCamelCase}}}HeaderParams,
+{{/headerParams.size}}
+{{#pathParams.size}}
+  models::{{{operationIdCamelCase}}}PathParams,
+{{/pathParams.size}}
+{{#queryParams.size}}
+  models::{{{operationIdCamelCase}}}QueryParams,
+{{/queryParams.size}}
+{{^x-consumes-multipart-related}}
+{{^x-consumes-multipart}}
+  {{#bodyParam}}
+  {{#vendorExtensions}}
+    {{^x-consumes-plain-text}}
+        {{^required}}Option<{{/required}}{{{dataType}}}{{^required}}>{{/required}},
+    {{/x-consumes-plain-text}}
+    {{#x-consumes-plain-text}}
+      {{#isString}}
+        String,
+      {{/isString}}
+      {{^isString}}
+        Bytes,
+      {{/isString}}
+    {{/x-consumes-plain-text}}
+  {{/vendorExtensions}}
+  {{/bodyParam}}
+{{/x-consumes-multipart}}
+{{/x-consumes-multipart-related}}
+), ValidationErrors>
+{
+{{#headerParams.size}}
+  header_params.validate()?;
+{{/headerParams.size}}
+{{#pathParams.size}}
+  path_params.validate()?;
+{{/pathParams.size}}
+{{#queryParams.size}}
+  query_params.validate()?;
+{{/queryParams.size}}
+{{^x-consumes-multipart-related}}
+{{^x-consumes-multipart}}
+  {{#bodyParam}}
+  {{#vendorExtensions}}
+      {{^x-consumes-plain-text}}
+          {{#required}}
+              let b = {{{operationIdCamelCase}}}BodyValidator { body: &body };
+              b.validate()?;
+          {{/required}}
+          {{^required}}
+            if let Some(body) = &body {
+              let b = {{{operationIdCamelCase}}}BodyValidator { body };
+              b.validate()?;
+            }
+          {{/required}}
+      {{/x-consumes-plain-text}}
+      {{#x-consumes-plain-text}}
+        {{#hasValidation}}
+            let b = {{{operationIdCamelCase}}}BodyValidator { body: &body };
+            b.validate()?;
+        {{/hasValidation}}
+      {{/x-consumes-plain-text}}
+ {{/vendorExtensions}}
+ {{/bodyParam}}
+{{/x-consumes-multipart}}
+{{/x-consumes-multipart-related}}
+
+Ok((
+{{#headerParams.size}}
+  header_params,
+{{/headerParams.size}}
+{{#pathParams.size}}
+  path_params,
+{{/pathParams.size}}
+{{#queryParams.size}}
+  query_params,
+{{/queryParams.size}}
+{{^x-consumes-multipart-related}}
+{{^x-consumes-multipart}}
+  {{#bodyParam}}
+  {{#vendorExtensions}}
+    body,
+  {{/vendorExtensions}}
+  {{/bodyParam}}
+{{/x-consumes-multipart}}
+{{/x-consumes-multipart-related}}
+))
+}

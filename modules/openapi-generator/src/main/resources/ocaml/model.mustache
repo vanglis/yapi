@@ -1,0 +1,27 @@
+{{>partial_header}}
+{{#models}}
+{{#model}}
+{{#description}}
+ * Schema {{{classname}}} : {{{description}}}
+ *)
+{{/description}}
+{{^description}}
+ *)
+{{/description}}
+
+{{^isEnum}}
+    {{#vendorExtensions.x-ocaml-isOneOf}}
+        {{>model-one-of}}
+    {{/vendorExtensions.x-ocaml-isOneOf}}
+
+    {{#vendorExtensions.x-ocaml-isAnyOf}}
+        {{>model-any-of}}
+    {{/vendorExtensions.x-ocaml-isAnyOf}}
+
+    {{^vendorExtensions.x-ocaml-isOneOf}}{{^vendorExtensions.x-ocaml-isAnyOf}}
+        {{>model-record}}
+    {{/vendorExtensions.x-ocaml-isAnyOf}}{{/vendorExtensions.x-ocaml-isOneOf}}
+{{/isEnum}}
+
+{{/model}}
+{{/models}}

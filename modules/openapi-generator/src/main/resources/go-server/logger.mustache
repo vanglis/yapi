@@ -1,0 +1,40 @@
+{{>partial_header}}
+package {{packageName}}
+
+import (
+	"net/http"
+{{#routers}}
+	{{#mux}}
+	"log"
+	"time"
+	{{/mux}}
+	{{#chi}}
+	"github.com/go-chi/chi/v5/middleware"
+	{{/chi}}
+{{/routers}}
+)
+
+{{#routers}}
+{{#mux}}
+func Logger(inner http.Handler, name string) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+
+		inner.ServeHTTP(w, r)
+
+		log.Printf(
+			"%s %s %s %s",
+			r.Method,
+			r.RequestURI,
+			name,
+			time.Since(start),
+		)
+	})
+}
+{{/mux}}
+{{#chi}}
+func Logger(inner http.Handler) http.Handler {
+	return middleware.Logger(inner)
+}
+{{/chi}}
+{{/routers}}

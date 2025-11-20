@@ -1,0 +1,49 @@
+package {{businessPackage}}.impl;
+
+{{#imports}}import {{import}};
+{{/imports}}
+import {{apiPackage}}.{{classname}};
+{{#models}}{{#model}}import {{apiPackage}}.model.{{classname}};
+{{/model}}{{/models}}
+import {{businessPackage}}.{{classname}}Service;
+import {{businessPackage}}.manager.{{classname}}Manager;
+import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * 业务服务实现: {{classname}}ServiceImpl
+ * 自动生成时间: {{generatedDate}}
+ */
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class {{classname}}ServiceImpl implements {{classname}}Service {
+
+    private final {{classname}}Manager {{classVarName}}Manager;
+{{#operations}}
+{{#operation}}
+
+    /**
+     * {{summary}}
+     * {{notes}}
+     */
+    @Override
+    public {{classname}}.UnifiedResponse<{{#returnType}}{{returnType}}{{/returnType}}{{^returnType}}Void{{/returnType}}> {{operationId}}(
+{{#allParams}}
+        {{dataType}} {{paramName}}{{^-last}},{{/-last}}
+{{/allParams}}
+    ) {
+        log.info("执行业务方法: {{operationId}}");
+        try {
+            // 调用Manager层处理业务逻辑
+            {{#returnType}}{{returnType}} result = {{/returnType}}{{classVarName}}Manager.{{operationId}}({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
+            return {{classname}}.UnifiedResponse.of({{#returnType}}result{{/returnType}}{{^returnType}}null{{/returnType}}, "Success", "200");
+        } catch (Exception e) {
+            log.error("业务方法执行失败: {{operationId}}", e);
+            return {{classname}}.UnifiedResponse.of(null, e.getMessage(), "500");
+        }
+    }
+{{/operation}}
+{{/operations}}
+}
