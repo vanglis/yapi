@@ -12,7 +12,7 @@ services:
       - yapii_net
 
   mongo:
-    image: bitnami/mongodb:latest
+    image: soldevelo/mongodb:latest
     container_name: yapii_mongo
     ports:
       - "27017:27017"
